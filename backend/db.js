@@ -11,21 +11,14 @@ if (!process.env.DATABASE_URL) {
 
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
+  ssl: {
+    rejectUnauthorized: false,
+  },
   connectionTimeoutMillis: 5000,
 });
 
-// Test connection once
-pool
-  .connect()
-  .then((client) => {
-    console.log("Connected to PostgreSQL");
-    client.release();
-  })
-  .catch((err) => {
-    console.error("Initial DB connection failed:", err);
-  });
+// Remove manual .connect() test block entirely
 
-// DO NOT kill server on DB error
 pool.on("error", (err) => {
   console.error("Unexpected DB error:", err);
 });
